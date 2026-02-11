@@ -49,21 +49,60 @@ body {
         flex-direction: column;
     }
 }
+
+
+.card:nth-child(1):hover {
+    background: #FF9B49; /* SLPG hover color */
+}
+
+.card:nth-child(2):hover {
+    background: #86D1F4; /* WLPG hover color */
+}
+
+
+.link-under {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #111;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.link-under:hover {
+    text-decoration: underline;
+}
+
+.card-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.card {
+    width: 220px; /* keep same width */
+    height: 35px; /* keep same height */
+}
+
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
-    <div class="card" onclick="location.href='SLPG Score Tool 3.3.html'">
-        <h1>SLPG</h1>
+    <div class="card-block">
+        <div class="card" onclick="location.href='SLPG Score Tool 3.5.html'">
+            <h1>SLPG</h1>
+        </div>
+        <a class="link-under" href="SLPG Certifcation Score Tool 3.5.html">SLPG Certification Tool</a>
     </div>
 
-    <div class="card" onclick="location.href='WLPG Score Tool 3.3.html'">
+    <div class="card" onclick="location.href='WLPG Score Tool 3.5.html'">
         <h1>WLPG</h1>
     </div>
 </div>
 
 </body>
 </html>
-
