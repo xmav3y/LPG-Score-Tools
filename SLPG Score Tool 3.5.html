@@ -356,6 +356,10 @@
 }
 
 
+#rawScoreCard {
+    display: none;
+}
+
 
 
 </style>
@@ -419,7 +423,6 @@
     </div>
 
 </div>
-
 
 <!-- New Excel Table Card -->
 <div class="card summary-card" id="excelTableCard">
@@ -503,6 +506,17 @@
 </div>
 
 
+<div class="summary-card" id="rawScoreCard">
+    <h2>Raw LPG & SLPG Score</h2>
+
+    <div>Average: <input type="text" id="avg" readonly placeholder="—"></div>
+    <div>Final Score: <span id="finalScore">0</span></div>
+    <div id="outputDisplay"></div>
+
+    <button id="copyBtn">Copy Entry</button>
+    <button id="viewAllBtn">View All Entries</button>
+    <button id="downloadAllBtn">Download All Entries (.txt)</button>
+</div>
 
 
 
