@@ -356,6 +356,9 @@
   box-sizing: border-box;
 }
 
+#rawScoreCard {
+    display: none;
+}
 
 
 
@@ -477,6 +480,20 @@
     <button id="copyAllExcelRowsBtn">Copy All as Excel Table</button>
     <button id="exportExcelBtn">Export to Excel</button>
 </div>
+
+
+
+<div class="summary-card" id="rawScoreCard">
+    <h2>WLPG Score</h2>
+    <div>Final Score: <span id="finalScore">0</span></div>
+    <div id="outputDisplay"></div>
+
+    <button id="copyBtn">Copy Entry</button>
+    <button id="viewAllBtn">View All Entries</button>
+    <button id="downloadAllBtn">Download All Entries (.txt)</button>
+</div>
+
+
 
 
 <!-- Popup for names -->
