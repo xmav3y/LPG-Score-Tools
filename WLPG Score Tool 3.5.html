@@ -360,6 +360,85 @@
     display: none;
 }
 
+/* Tag bar under notes */
+.tagbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* Tag chip */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  background: #eef2f7;
+  color: #223;
+  border: 1px solid #ccd4e0;
+  user-select: none;
+}
+
+/* Small category badge like "6", "5", etc. */
+.tag .badge {
+  display: inline-block;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 11px;
+  color: #fff;
+  padding: 0 4px;
+}
+
+/* Close (remove) button */
+.tag .close {
+  cursor: pointer;
+  font-weight: 700;
+  color: #556;
+}
+
+.tag .close:hover {
+  color: #000;
+}
+
+/* Optional: color by score header/category */
+.badge.h6 { background: #2e7d32; }  /* 6 - green */
+.badge.h5 { background: #388e3c; }  /* 5 */
+.badge.h4 { background: #689f38; }  /* 4 */
+.badge.h3 { background: #f9a825; }  /* 3 - amber */
+.badge.h2 { background: #fb8c00; }  /* 2 */
+.badge.h1 { background: #e53935; }  /* 1 - red */
+.badge.h0 { background: #757575; }  /* 0 - gray */
+
+
+/* Smart phrase suggestions */
+.smart-suggestions{
+    position:absolute;
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius:8px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    max-height:140px;
+    overflow-y:auto;
+    z-index:9999;
+    font-size:13px;
+}
+
+.smart-item{
+    padding:6px 8px;
+    cursor:pointer;
+}
+
+.smart-item:hover{
+    background:#f0f0f0;
+}
+
 
 
 </style>
@@ -391,28 +470,28 @@
         <button class="pc-circle-btn" title="Open Orthography Grid Comments"></button>
         <label for="pc">ORTHOGRAPHY</label>
         <input type="text" id="pc" class="numInput" placeholder="0">
-        <textarea id="pc_text" placeholder="Notes"></textarea>
+        <textarea id="pc_text" data-category="pc" placeholder="Notes"></textarea>
     </div>
 
     <div class="card pc-card">
         <button class="pc-circle-btn" title="Open GA Grid Comments"></button>
         <label for="ga">GA</label>
         <input type="text" id="ga" class="numInput" placeholder="0">
-        <textarea id="ga_text" placeholder="Notes"></textarea>
+        <textarea id="ga_text" data-category="ga" placeholder="Notes"></textarea>
     </div>
 
     <div class="card pc-card">
         <button class="pc-circle-btn" title="Open Style Grid Comments"></button>
         <label for="lr">STYLE</label>
         <input type="text" id="lr" class="numInput" placeholder="0">
-        <textarea id="lr_text" placeholder="Notes"></textarea>
+        <textarea id="lr_text" data-category="lr" placeholder="Notes"></textarea>
     </div>
 
     <div class="card pc-card">
         <button class="pc-circle-btn" title="Open CR Grid Comments"></button>
         <label for="cr">CR</label>
         <input type="text" id="cr" class="numInput" placeholder="0">
-        <textarea id="cr_text" placeholder="Notes"></textarea>
+        <textarea id="cr_text" data-category="cr" placeholder="Notes"></textarea>
     </div>
 
 </div>
@@ -563,11 +642,15 @@ function updateAverage(){
 }
 
 
-function updateConsolidated(){
-    const ids=["pc","ga","lr","cr"];
-    const finalScore = document.getElementById("finalScore").textContent;
-    const rawScore = ids.map(id=>document.getElementById(id).value||"0").join(" ") + " = " + finalScore;
 
+function updateConsolidated(){
+    const ids = ["pc", "ga", "lr", "cr"];
+    const finalScore = document.getElementById("finalScore").textContent;
+
+    // Build SLPG Raw Score: "pc ga lr cr = finalScore" but keep current behavior
+    const rawScore = ids
+        .map(id => document.getElementById(id).value || "0")
+        .join(" ") + " = " + finalScore;
 
     const lines = [
         `Trainee Name: ${document.getElementById("traineeName").value || ""}`,
@@ -576,24 +659,28 @@ function updateConsolidated(){
         ""
     ];
 
-const labelMap = {
-  pc: "ORTHOGRAPHY",
-  ga: "GA",
-  lr: "STYLE",
-  cr: "CR"
-};
+    // Map internal IDs to the labels your parser expects
+    const labelMap = {
+        pc: "ORTHOGRAPHY",
+        ga: "GA",
+        lr: "STYLE",
+        cr: "CR"
+    };
 
-ids.forEach(id=>{
-    const value=document.getElementById(id).value||"";
-    const text=document.getElementById(id+"_text").value||"";
-    lines.push(`${labelMap[id]}: ${value}`);
-    if(text) lines.push(text);
-    lines.push("");
-});
+    // Write blocks with the correct labels so getBlock() can find them
+    ids.forEach(id => {
+        const label = labelMap[id] || id.toUpperCase(); // fallback just in case
+        const value = document.getElementById(id).value || "";
+        const notes = compileNotes(id + "_text");
 
+        lines.push(`${label}: ${value}`);
+        if (notes) lines.push(notes);
+        lines.push("");
+    });
 
     document.getElementById("outputDisplay").textContent = lines.join("\n");
 }
+
 
 // ------------------- Input validation -------------------
 document.querySelectorAll(".numInput").forEach(input=>{
@@ -613,6 +700,7 @@ document.querySelectorAll(".numInput").forEach(input=>{
 // ------------------- Multi-entry storage -------------------
 let allEntries = [];
 
+
 function resetAllFields(){
     document.getElementById("traineeName").value = "";
     ["pc","ga","lr","cr"].forEach(id=>{
@@ -620,11 +708,19 @@ function resetAllFields(){
         document.getElementById(id+"_text").value = "";
     });
 
+    // ✅ Clear all selected tags and refresh tag chips/UI
+    clearAllChecklistSelections();
+
     document.getElementById("finalScore").textContent = "0";
     document.getElementById("finalScore").classList.add("highlight");
     document.getElementById("outputDisplay").textContent = "";
+
+    // Keep these to ensure preview cards are in sync
     updateExcelTableCard();
+    updateFullExcelTable();
+    updateAverage();
 }
+
 
 document.getElementById("addEntryBtn").addEventListener("click", () => {
 
@@ -719,9 +815,9 @@ document.getElementById("viewAllBtn").addEventListener("click", ()=>{
 function updateExcelTableCard(){
     document.getElementById("tbl_traineeName").textContent = document.getElementById("traineeName").value || "";
     ["pc","ga","lr","cr"].forEach(id=>{
-        document.getElementById("tbl_"+id).textContent = document.getElementById(id).value || "";
-        document.getElementById("tbl_"+id+"_notes").textContent = document.getElementById(id+"_text").value || "";
-    });
+  document.getElementById("tbl_"+id).textContent = document.getElementById(id).value || "";
+  document.getElementById("tbl_"+id+"_notes").textContent = compileNotes(id + "_text");
+});
 }
 
 document.getElementById("copyExcelRowBtn").addEventListener("click", ()=>{
@@ -812,7 +908,7 @@ savedData[name] = {
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "SLPG Scores");
-    XLSX.writeFile(wb, "SLPG_All_Trainees.xlsx");
+    XLSX.writeFile(wb, "WLPG_All_Trainees.xlsx");
 });
 
 function updateFullExcelTable(){
@@ -910,16 +1006,6 @@ document.getElementById("fullExcelBody").addEventListener("click", (e) => {
 updateExcelTableCard();
 updateFullExcelTable();
 
-let formChanged = false;
-document.querySelectorAll("input, textarea, select").forEach(el=>{
-    el.addEventListener("input", ()=>{ formChanged=true; });
-});
-window.addEventListener("beforeunload", (event)=>{
-    if(formChanged){
-        event.preventDefault();
-        event.returnValue = "";
-    }
-});
 </script>
 
 
@@ -1017,7 +1103,7 @@ groups.forEach(group => {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.value = item;
-        checkbox.checked = textarea.value.split("\n").includes(item);
+        checkbox.checked = selectedChecklist[textarea.id]?.has(item) || false;
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(" " + item));
         popup.appendChild(label);
@@ -1047,26 +1133,26 @@ groups.forEach(group => {
         popup.style.left = left + "px";
 
         // Handle checkbox changes
-        popup.addEventListener("change", (e) => {
-    if (e.target.tagName !== "INPUT") return;
+        
+popup.addEventListener("change", (e) => {
+  if (e.target.tagName !== "INPUT") return;
 
-    const checkboxes = popup.querySelectorAll("input[type=checkbox]");
-    const lines = currentTextarea.value.split("\n").filter(l => l); // preserve other notes
-    const otherNotes = lines.filter(line => {
-        return !Array.from(checkboxes).some(cb => cb.value === line);
-    });
+  const textareaId = currentTextarea.id;
+  const cb = e.target;
+  if(!selectedChecklist[textareaId]) selectedChecklist[textareaId] = new Set();
 
-    // Get all checked items in order
-    const checkedItems = Array.from(checkboxes)
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
+  if (cb.checked) selectedChecklist[textareaId].add(cb.value);
+  else selectedChecklist[textareaId].delete(cb.value);
 
-    currentTextarea.value = [...checkedItems, ...otherNotes].join("\n");
+  // Refresh tags + all dependent views
+  renderTagsForTextarea(textareaId);
+  updateConsolidated();
+  updateExcelTableCard();
+  updateFullExcelTable();
 
-    // Update outputs
-    updateConsolidated();
-    updateExcelTableCard();
-    updateFullExcelTable();
+
+  // ✅ Add this line:
+  refreshTagsForCurrent();
 });
 
     });
@@ -1078,11 +1164,508 @@ document.addEventListener("click", (e)=>{
         document.querySelectorAll(".checklist-popup").forEach(p => p.remove());
     }
 });
+
+
+
+// Clear all checklist selections and re-render tag chips
+function clearAllChecklistSelections() {
+  // 1) Empty the sets
+  Object.keys(selectedChecklist).forEach(key => selectedChecklist[key].clear());
+
+  // 2) Re-render the tagbars (chips)
+  ["pc_text","ga_text","lr_text","cr_text"].forEach(id => renderTagsForTextarea(id));
+
+  // 3) Close any open popup to avoid stale checkboxes
+  document.querySelectorAll(".checklist-popup").forEach(p => p.remove());
+
+  // 4) Refresh dependent views
+  updateConsolidated();
+  updateExcelTableCard();
+}
+
+
+
+/** ============================================
+ *  HIDDEN DATA STORE + TAG RENDERING (CHIPS)
+ *  ============================================ */
+
+// Hidden store of selected checklist bullets per notes field
+const selectedChecklist = {
+  pc_text: new Set(),
+  ga_text: new Set(),
+  lr_text: new Set(),
+  cr_text: new Set()
+};
+
+// Create tagbar elements right after each notes textarea
+(function initTagbars(){
+  ["pc_text","ga_text","lr_text","cr_text"].forEach(id=>{
+    const ta = document.getElementById(id);
+    if(!ta) return;
+    const tagbar = document.createElement("div");
+    tagbar.className = "tagbar";
+    tagbar.id = id + "_tags";
+    ta.insertAdjacentElement("afterend", tagbar);
+    renderTagsForTextarea(id);
+  });
+})();
+
+// Utility: find the header (6..0) for a checklist item
+function findHeaderForItem(textareaId, item){
+  const groups = checklistData[textareaId] || [];
+  for(const g of groups){
+    if(g.items.includes(item)) return g.header;
+  }
+  return "";
+}
+
+// Renders the tags from selectedChecklist under the given textarea
+function renderTagsForTextarea(textareaId){
+  const tagbar = document.getElementById(textareaId + "_tags");
+  if(!tagbar) return;
+  tagbar.innerHTML = "";
+
+  // Maintain the original group/item order when rendering tags
+  const groups = checklistData[textareaId] || [];
+  for(const g of groups){
+    for(const item of g.items){
+      if(!selectedChecklist[textareaId].has(item)) continue;
+
+      const header = g.header;
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.dataset.item = item;
+      tag.dataset.textarea = textareaId;
+
+      const badge = document.createElement("span");
+      badge.className = "badge h" + (header || "0");
+      badge.textContent = header || "•";
+
+      const label = document.createElement("span");
+      label.className = "label";
+      label.textContent = item.replace(/^•\s*/,""); // nicer label text
+
+      const close = document.createElement("span");
+      close.className = "close";
+      close.textContent = "×";
+
+      tag.appendChild(badge);
+      tag.appendChild(label);
+      tag.appendChild(close);
+      tagbar.appendChild(tag);
+    }
+  }
+}
+
+// Clicking the × on a tag removes it from the hidden store,
+// unticks the popup checkbox (if open), and updates UI/exports.
+document.addEventListener("click", (e)=>{
+  const close = e.target.closest(".tag .close");
+  if(!close) return;
+
+  const tag = close.closest(".tag");
+  const item = tag.dataset.item;
+  const textareaId = tag.dataset.textarea;
+
+  // 1) Update hidden store
+  if(selectedChecklist[textareaId]) {
+    selectedChecklist[textareaId].delete(item);
+  }
+
+  // 2) Uncheck in popup if visible
+  document.querySelectorAll(".checklist-popup input[type=checkbox]").forEach(cb=>{
+    if(cb.value === item) cb.checked = false;
+  });
+
+  // 3) Refresh chips and all dependent outputs
+  renderTagsForTextarea(textareaId);
+  updateConsolidated();
+  updateExcelTableCard();
+  updateFullExcelTable();
+});
+
+// Compile notes for export/display:
+//   - first: selected tags (in original group/item order, each on its own line)
+//   - then: free-form notes from the textarea (verbatim)
+function compileNotes(textareaId){
+  const ta = document.getElementById(textareaId);
+  const freeForm = (ta?.value || "").split("\n").filter(Boolean);
+
+  const groups = checklistData[textareaId] || [];
+  const selected = [];
+  for(const g of groups){
+    for(const item of g.items){
+      if(selectedChecklist[textareaId]?.has(item)) selected.push(item);
+    }
+  }
+
+  // Join selected (tags) plus free-form notes
+  return [...selected, ...freeForm].join("\n");
+}
+
+
+let formChanged = false;
+document.querySelectorAll("input, textarea, select").forEach(el=>{
+    el.addEventListener("input", ()=>{ formChanged=true; });
+});
+window.addEventListener("beforeunload", (e) => {
+  if (!formChanged) return;
+  e.preventDefault();
+  e.returnValue = "";
+  return "";
+});
+
+
+
+
+
+/* =====================================================
+   SMART EVALUATOR PHRASE LIBRARY (Enhanced)
+   - Debounced matching
+   - startsWith > includes ranking
+   - Arrow keys, Enter, Esc
+   - Safer localStorage
+   - Blur/scroll/resize cleanup
+   - Caret-aware line replacement (end-of-line)
+===================================================== */
+
+(function () {
+  const MIN_QUERY_LEN = 2;
+  const MAX_SUGGESTIONS = 8;
+  const DEBOUNCE_MS = 150;
+
+  let suggestionBox = null;
+  let highlightedIndex = -1;
+  let currentTextarea = null;
+  let currentSuggestions = [];
+
+  /* ---------------- Storage helpers ---------------- */
+  function getPhraseLibrary() {
+    try {
+      return JSON.parse(localStorage.getItem("phraseLibrary") || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function setPhraseLibrary(lib) {
+    try {
+      localStorage.setItem("phraseLibrary", JSON.stringify(lib));
+    } catch {
+      // If quota exceeded, we can prune later or ignore
+    }
+  }
+
+  function normalizePhrase(phrase) {
+    // Trim, collapse multiple spaces, remove trailing punctuation-only lines
+    let p = phrase.replace(/\s+/g, " ").trim();
+    // Toss very short fragments
+    if (p.length < 6) return "";
+    return p;
+  }
+
+  function savePhrase(category, phrase) {
+    const norm = normalizePhrase(phrase);
+    if (!norm) return;
+    const lib = getPhraseLibrary();
+    if (!lib[category]) lib[category] = {};
+    if (!lib[category][norm]) lib[category][norm] = 0;
+    lib[category][norm] += 1;
+    setPhraseLibrary(lib);
+  }
+
+  function getSuggestions(category, query) {
+    const lib = getPhraseLibrary();
+    if (!lib[category]) return [];
+    const q = query.toLowerCase();
+
+    const entries = Object.keys(lib[category]).map((text) => ({
+      text,
+      score: lib[category][text] || 1
+    }));
+
+    // Rank: startsWith first (higher), then includes; tie-break by frequency
+    const startsWith = [];
+    const includes = [];
+
+    for (const e of entries) {
+      const t = e.text.toLowerCase();
+      if (t.startsWith(q)) startsWith.push(e);
+      else if (t.includes(q)) includes.push(e);
+    }
+
+    startsWith.sort((a, b) => b.score - a.score);
+    includes.sort((a, b) => b.score - a.score);
+
+    return [...startsWith, ...includes]
+      .slice(0, MAX_SUGGESTIONS)
+      .map((e) => e.text);
+  }
+
+  /* ---------------- Debounce utility ---------------- */
+  function debounce(fn, ms) {
+    let t;
+    return function (...args) {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), ms);
+    };
+  }
+
+  /* ---------------- Suggestion UI ---------------- */
+  function ensureSuggestionBox() {
+    if (suggestionBox) return suggestionBox;
+    suggestionBox = document.createElement("div");
+    suggestionBox.className = "smart-suggestions";
+    document.body.appendChild(suggestionBox);
+    return suggestionBox;
+  }
+
+  function clearSuggestionBox() {
+    highlightedIndex = -1;
+    currentSuggestions = [];
+    if (suggestionBox) {
+      suggestionBox.remove();
+      suggestionBox = null;
+    }
+  }
+
+  function positionSuggestionBoxNearTextarea(ta) {
+    if (!suggestionBox) return;
+    // Anchor below the textarea (simple & reliable)
+    const rect = ta.getBoundingClientRect();
+    suggestionBox.style.left = rect.left + window.scrollX + "px";
+    suggestionBox.style.top = rect.bottom + window.scrollY + "px";
+    suggestionBox.style.width = rect.width + "px";
+    suggestionBox.style.zIndex = 9999;
+  }
+
+  function renderSuggestions(ta, suggestions) {
+    if (!suggestions.length) {
+      clearSuggestionBox();
+      return;
+    }
+
+    const box = ensureSuggestionBox();
+    box.innerHTML = "";
+    currentSuggestions = suggestions;
+    highlightedIndex = -1;
+
+    suggestions.forEach((text, idx) => {
+      const item = document.createElement("div");
+      item.className = "smart-item";
+      item.textContent = text;
+      item.setAttribute("role", "option");
+      item.setAttribute("aria-selected", "false");
+
+      item.addEventListener("mouseenter", () => {
+        setHighlightedIndex(idx);
+      });
+
+      item.addEventListener("mousedown", (e) => {
+        // Prevent textarea blur before we insert
+        e.preventDefault();
+        acceptSuggestion(idx);
+      });
+
+      box.appendChild(item);
+    });
+
+    positionSuggestionBoxNearTextarea(ta);
+  }
+
+  function setHighlightedIndex(newIndex) {
+    const items = suggestionBox
+      ? Array.from(suggestionBox.querySelectorAll(".smart-item"))
+      : [];
+    if (!items.length) return;
+
+    // Clear previous
+    if (highlightedIndex >= 0 && items[highlightedIndex]) {
+      items[highlightedIndex].style.background = "";
+      items[highlightedIndex].setAttribute("aria-selected", "false");
+    }
+
+    highlightedIndex = newIndex;
+
+    if (highlightedIndex >= 0 && items[highlightedIndex]) {
+      items[highlightedIndex].style.background = "#f0f0f0";
+      items[highlightedIndex].setAttribute("aria-selected", "true");
+      // Ensure visibility inside box
+      items[highlightedIndex].scrollIntoView({ block: "nearest" });
+    }
+  }
+
+  function moveHighlight(delta) {
+    if (!suggestionBox || !currentSuggestions.length) return;
+    const newIndex = (highlightedIndex + delta + currentSuggestions.length) % currentSuggestions.length;
+    setHighlightedIndex(newIndex);
+  }
+
+  function getCurrentLineAndIndex(ta) {
+    // Split by lines and compute the index of the last line based on caret
+    const value = ta.value;
+    const selStart = ta.selectionStart ?? value.length;
+    const before = value.slice(0, selStart);
+    const lines = before.split("\n");
+    const currentLineText = lines[lines.length - 1];
+    return { currentLineText, selStart, linesBefore: lines.length };
+  }
+
+  function replaceCurrentLineWith(ta, text) {
+    const value = ta.value;
+    const selStart = ta.selectionStart ?? value.length;
+    const selEnd = ta.selectionEnd ?? value.length;
+    // Find start of current line
+    const before = value.slice(0, selStart);
+    const after = value.slice(selEnd);
+
+    const lastNewlineIdx = before.lastIndexOf("\n");
+    const lineStart = lastNewlineIdx === -1 ? 0 : lastNewlineIdx + 1;
+
+    const replaced =
+      value.slice(0, lineStart) + text + value.slice(selStart) /* keep the rest of that line + after */;
+    ta.value = replaced;
+
+    // Place caret at end of inserted text (on that line)
+    const newCaretPos = lineStart + text.length;
+    ta.setSelectionRange(newCaretPos, newCaretPos);
+    ta.focus();
+  }
+
+  function acceptSuggestion(idx) {
+    if (!currentTextarea || !currentSuggestions.length) return;
+    const i = idx >= 0 ? idx : highlightedIndex;
+    if (i < 0) return;
+
+    const best = currentSuggestions[i];
+    replaceCurrentLineWith(currentTextarea, best);
+    clearSuggestionBox();
+  }
+
+  /* ---------------- Event wiring ---------------- */
+  const handleInput = debounce((e) => {
+    const ta = e.target;
+    if (!(ta instanceof HTMLTextAreaElement)) return;
+    currentTextarea = ta;
+
+    const category = ta.dataset.category;
+    if (!category) {
+      clearSuggestionBox();
+      return;
+    }
+
+    // Current "line" fragment (after last newline)
+    const { currentLineText } = getCurrentLineAndIndex(ta);
+    const q = currentLineText.trim();
+
+    if (q.length < MIN_QUERY_LEN) {
+      clearSuggestionBox();
+      return;
+    }
+
+    const suggestions = getSuggestions(category, q);
+    if (!suggestions.length) {
+      clearSuggestionBox();
+      return;
+    }
+
+    renderSuggestions(ta, suggestions);
+  }, DEBOUNCE_MS);
+
+  function handleKeyDown(e) {
+    const ta = e.target;
+    if (!(ta instanceof HTMLTextAreaElement) || !ta.dataset.category) return;
+
+    // Navigation only when box exists
+    if (!suggestionBox || !currentSuggestions.length) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      moveHighlight(+1);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      moveHighlight(-1);
+    } else if (e.key === "Enter") {
+      // Accept if a suggestion is highlighted; otherwise allow newline
+      if (highlightedIndex >= 0) {
+        e.preventDefault();
+        acceptSuggestion(highlightedIndex);
+      }
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      clearSuggestionBox();
+    } else if (e.key === "Tab") {
+      // Keep your original Tab-to-accept behavior on the top suggestion
+      if (currentSuggestions.length) {
+        e.preventDefault();
+        acceptSuggestion(highlightedIndex >= 0 ? highlightedIndex : 0);
+      }
+    }
+  }
+
+  function handleBlur(e) {
+    // Give mousedown on suggestion chance to fire (use microtask)
+    setTimeout(() => {
+      if (document.activeElement !== currentTextarea) {
+        clearSuggestionBox();
+      }
+    }, 0);
+  }
+
+  function handleScrollOrResize() {
+    if (!currentTextarea || !suggestionBox) return;
+    positionSuggestionBoxNearTextarea(currentTextarea);
+  }
+
+  // Attach listeners to all data-category textareas
+  const noteAreas = Array.from(document.querySelectorAll("textarea[data-category]"));
+  noteAreas.forEach((ta) => {
+    ta.addEventListener("input", handleInput);
+    ta.addEventListener("keydown", handleKeyDown);
+    ta.addEventListener("blur", handleBlur);
+  });
+
+  // Cleanup on layout changes
+  window.addEventListener("scroll", handleScrollOrResize, true);
+  window.addEventListener("resize", handleScrollOrResize);
+
+  /* --------- Learning cadence: save when entry is saved --------- */
+  // Keep your existing "Save Entry" learning but with normalization
+  const addEntryBtn = document.getElementById("addEntryBtn");
+  if (addEntryBtn) {
+    addEntryBtn.addEventListener("click", () => {
+      noteAreas.forEach((ta) => {
+        const category = ta.dataset.category;
+        if (!category) return;
+        ta.value
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .forEach((line) => savePhrase(category, line));
+      });
+    });
+  }
+
+  /* --------- Optional: Learn immediately as evaluators type ---------
+     If you want immediate learning of completed lines (when user presses Enter),
+     uncomment the code below:
+
+  noteAreas.forEach((ta) => {
+    ta.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const category = ta.dataset.category;
+        if (!category) return;
+        const { currentLineText } = getCurrentLineAndIndex(ta);
+        const norm = normalizePhrase(currentLineText);
+        if (norm) savePhrase(category, norm);
+      }
+    });
+  });
+  */
+
+})();
+
 </script>
-
-
-
-
 
 </body>
 </html>
