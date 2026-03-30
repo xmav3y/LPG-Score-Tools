@@ -2,107 +2,2222 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>LPG Score Tools</title>
-
+<title>SLPG Score Input Tool</title>
 <style>
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #e0e0e0;
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #888;
-}
-
-.container {
-    display: flex;
-    gap: 30px;
-}
-
-.card-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.card {
-    background: #f5f5f5;
-    border-radius: 14px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    padding: 40px 60px;
-    min-width: 220px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.card h1 {
-    font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
-    font-weight: 600;
-    margin: 0;
-    color: #222;
-}
-
-/* Hover colors */
-.slpg:hover {
-    background: #FF9B49;
-    transform: translateY(-4px);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.18);
-}
-
-.wlpg:hover {
-    background: #86D1F4;
-    transform: translateY(-4px);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.18);
-}
-
-.link-under {
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-    color: #111;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.link-under:hover {
-    text-decoration: underline;
-}
-
-@media (max-width: 600px) {
-    .container {
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #e0e0e0;
+        margin: 0;
+        padding: 20px;
+        display: flex;
         flex-direction: column;
+        align-items: center;
+        color: #111;
     }
+    h1, h2 {
+        font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #222;
+    }
+
+.pc-card {
+    position: relative;
 }
+
+.pc-circle-btn {
+    position: absolute;
+    top: 0px;
+    right: 8px;
+
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+
+    background: #FF9B49 !important;
+    color: #FFF;
+    border: none;
+
+    font-size: 13px;
+    font-weight: regular;
+    line-height: 22px;
+
+    cursor: pointer;
+    padding: 0;
+}
+
+.pc-circle-btn:hover {
+    background: #E6883F !important;
+}
+
+.checklist-popup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 9999;
+    min-width: 200px;
+    max-width: 250px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.trainee-circle-btn {
+    position: absolute;
+    top: 0px;
+    right: 8px;
+
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+
+    background: #AFE6FF !important;
+    color: #FFF;
+    border: none;
+
+    font-size: 13px;
+    font-weight: regular;
+    line-height: 22px;
+
+    cursor: pointer;
+    padding: 0;
+}
+
+.trainee-circle-btn:hover {
+    background: #86D1F4 !important;
+}
+
+
+    .card-row {
+        display: flex;
+        gap: 15px;
+        width: 100%;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+    #traineeNameCardRow { justify-content: center; }
+    .card {
+        background: #f5f5f5;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 15px;
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+        color: #111;
+    }
+    .card label { font-weight: 500; text-align: center; }
+    .card input[type="text"], .card select {
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        text-align: center;
+        outline: none;
+        transition: border-color 0.2s;
+        font-family: Calibri, sans-serif;
+        background: #f0f0f0;
+        color: #111;
+    }
+    .card input[type="text"]:focus, .card select:focus { border-color: #888; }
+    .card textarea {
+        padding: 6px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        resize: none;
+        min-height: 120px;
+        font-family: Calibri, sans-serif;
+        text-align: left;
+        background: #f0f0f0;
+        color: #111;
+    }
+    #traineeNameCard { flex: 0 0 33.33%; max-width: 33.33%; }
+    #traineeNameCard select { width: 90%; margin: 0 auto; }
+    .summary-card {
+        background: #f5f5f5;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 20px;
+        margin: 20px 0;
+        width: 100%;
+        max-width: 1200px;
+        text-align: left;
+        font-family: Calibri, sans-serif;
+    }
+    #avg {
+        font-weight: bold;
+        font-size: 20px;
+        text-align: center;
+        width: 100px;
+        margin: 10px auto;
+        font-family: Calibri, sans-serif;
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+    #finalScore {
+        font-weight: bold;
+        font-size: 22px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: #f0f0f0;
+        display: inline-block;
+        margin-top: 8px;
+        transition: background 0.2s, border 0.2s;
+        min-width: 60px;
+        text-align: center;
+        border: 1px solid #ccc;
+    }
+    #finalScore.highlight { border: 2px solid #a00; background: #f8dede; }
+    #outputDisplay {
+        background: #f0f0f0;
+        border-radius: 10px;
+        padding: 15px;
+        font-family: Calibri, monospace;
+        white-space: pre-wrap;
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 10px;
+        text-align: left;
+        color: #111;
+    }
+    button {
+        background: #888;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background 0.2s;
+        margin-right: 10px;
+    }
+    button:hover { background: #555; }
+    @media(max-width: 900px){
+        .card-row { flex-direction: column; }
+        #traineeNameCard { flex: 1 1 100%; max-width: 100%; }
+    }
+    /* Popup styles */
+    #popupOverlay {
+        position: fixed;
+        top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #popupBox {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+    }
+    #popupBox textarea {
+        width: 100%;
+        height: 120px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        resize: none;
+        box-sizing: border-box;
+    }
+    /* Excel Table Card */
+    #excelTableCard table { border-collapse: collapse; width: 100%; background: #fff; }
+    #excelTableCard th, #excelTableCard td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; white-space: pre-wrap; }
+    #excelTableCard th { background: #eee; }
+
+#fullExcelTableCard table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #fff;
+}
+
+#fullExcelTableCard th,
+#fullExcelTableCard td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: left;
+    vertical-align: top;
+    white-space: pre-wrap;
+}
+
+#fullExcelTableCard th {
+    background: #eee;
+}
+
+
+.button-row {
+    display: flex;      /* Put buttons side by side */
+    gap: 10px;          /* Space between buttons */
+    margin-top: 15px;   /* Space above buttons */
+}
+
+.button-row button {
+    flex: 1;            /* Make buttons same width (optional) */
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+
+/* Trainee name cell stays normal */
+.tn-cell {
+    white-space: nowrap;
+}
+
+/* Inner wrapper handles alignment */
+.tn-cell-inner {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Normalize the circle button inside tables */
+.tn-cell-inner .trainee-circle-btn {
+    position: static;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    flex-shrink: 0;
+}
+
+
+/* ------------------------
+   Excel Table Vertical Alignment
+   ------------------------ */
+#fullExcelTable td,
+#fullExcelTable th {
+    vertical-align: middle;  /* center content vertically */
+}
+
+/* Trainee name cell: center the button + name */
+.tn-cell-inner {
+    display: flex;
+    align-items: center;      /* vertically center button + text */
+    gap: 6px;                 /* optional spacing between button and name */
+}
+
+/* Optional: make multi-line notes cells wrap nicely */
+#fullExcelTable td {
+    white-space: pre-wrap;    /* preserve line breaks in notes */
+}
+
+
+/* FIX: Align trainee blue circle with name in Excel table */
+#fullExcelTable td.tn-cell {
+    vertical-align: middle;
+}
+
+#fullExcelTable .tn-cell-inner {
+    display: flex;
+    align-items: center;   /* vertical centering */
+}
+
+#fullExcelTable .trainee-circle-btn {
+    margin-top: 0;
+    line-height: 22px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.score-box span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#avg {
+  width: 55px;
+  height: 24px;         /* force exact height */
+  line-height: 24px;    /* match height */
+  padding: 0 6px;       /* remove default input padding issues */
+  text-align: center;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+
+#rawScoreCard {
+    display: none;
+}
+
+/* Tag bar under notes */
+.tagbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* Tag chip */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  background: #eef2f7;
+  color: #223;
+  border: 1px solid #ccd4e0;
+  user-select: none;
+}
+
+/* Small category badge like "6", "5", etc. */
+.tag .badge {
+  display: inline-block;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 11px;
+  color: #fff;
+  padding: 0 4px;
+}
+
+/* Close (remove) button */
+.tag .close {
+  cursor: pointer;
+  font-weight: 700;
+  color: #556;
+}
+.tag .close:hover { color: #000; }
+
+/* Optional: color by score header/category */
+.badge.h6 { background: #2e7d32; }  /* 6 - green */
+.badge.h5 { background: #388e3c; }  /* 5 */
+.badge.h4 { background: #689f38; }  /* 4 */
+.badge.h3 { background: #f9a825; }  /* 3 - amber */
+.badge.h2 { background: #fb8c00; }  /* 2 */
+.badge.h1 { background: #e53935; }  /* 1 - red */
+.badge.h0 { background: #757575; }  /* 0 - gray */
+
+
+/* Smart phrase suggestions */
+.smart-suggestions{
+    position:absolute;
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius:8px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    max-height:140px;
+    overflow-y:auto;
+    z-index:9999;
+    font-size:13px;
+}
+
+.smart-item{
+    padding:6px 8px;
+    cursor:pointer;
+}
+
+.smart-item:hover{
+    background:#f0f0f0;
+}
+
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<!-- Checklist Popup (reused for all buttons) -->
+<div id="checklistPopup" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:10000;">
+    <div id="checklistItems"></div>
+</div>
 
-    <div class="card-block">
-        <div class="card slpg" onclick="location.href='SLPG Score Tool 3.5.html'">
-            <h1>SLPG</h1>
-        </div>
-        <a class="link-under" href="SLPG Certification Score Tool 3.5.html">
-            SLPG Certification Tool
-        </a>
+
+
+
+<h1>SLPG Score Input</h1>
+
+<div class="card-row" id="traineeNameCardRow">
+    <div class="card" id="traineeNameCard">
+        <label for="traineeName">Trainee Name</label>
+        <select id="traineeName"><option value="">Select Name</option></select>
+    </div>
+</div>
+
+
+
+<div class="card-row">
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open PC Grid Comments"></button>
+        <label for="pc">PC</label>
+        <input type="text" id="pc" class="numInput" placeholder="0">
+        <textarea id="pc_text" data-category="pc" placeholder="Notes"></textarea>
     </div>
 
-    <div class="card-block">
-        <div class="card wlpg" onclick="location.href='WLPG Score Tool 3.5.html'">
-            <h1>WLPG</h1>
-        </div>
-        <a class="link-under" href="WLPG Certification Tool 3.5.html">
-            WLPG Certification Tool
-        </a>
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open GA Grid Comments"></button>
+        <label for="ga">GA</label>
+        <input type="text" id="ga" class="numInput" placeholder="0">
+        <textarea id="ga_text" data-category="ga" placeholder="Notes"></textarea>
+    </div>
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open LR Grid Comments"></button>
+        <label for="lr">LR</label>
+        <input type="text" id="lr" class="numInput" placeholder="0">
+        <textarea id="lr_text" data-category="lr" placeholder="Notes"></textarea>
+    </div>
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open FL Grid Comments"></button>
+        <label for="fl">FL</label>
+        <input type="text" id="fl" class="numInput" placeholder="0">
+        <textarea id="fl_text" data-category="fl" placeholder="Notes"></textarea>
+    </div>
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open CR Grid Comments"></button>
+        <label for="cr">CR</label>
+        <input type="text" id="cr" class="numInput" placeholder="0">
+        <textarea id="cr_text" data-category="cr" placeholder="Notes"></textarea>
     </div>
 
 </div>
 
+<!-- New Excel Table Card -->
+<div class="card summary-card" id="excelTableCard">
+
+    <div class="card-header">
+        <h2>Live Excel Row Preview</h2>
+
+        <div class="score-box">
+            <span><b>Average:</b> <input type="text" id="avg" readonly placeholder="—"></span>
+            <span class="score-divider">|</span>
+            <span><b>Final Score:</b> <span id="finalScore">0</span></span>
+        </div>
+    </div>
+
+
+    <table id="excelTable">
+        <thead>
+            <tr>
+                <th>Trainee Name</th>
+                <th>PC</th><th>PC Notes</th>
+                <th>GA</th><th>GA Notes</th>
+                <th>LR</th><th>LR Notes</th>
+                <th>FL</th><th>FL Notes</th>
+                <th>CR</th><th>CR Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="excelRow">
+                <td id="tbl_traineeName"></td>
+                <td id="tbl_pc"></td><td id="tbl_pc_notes"></td>
+                <td id="tbl_ga"></td><td id="tbl_ga_notes"></td>
+                <td id="tbl_lr"></td><td id="tbl_lr_notes"></td>
+                <td id="tbl_fl"></td><td id="tbl_fl_notes"></td>
+                <td id="tbl_cr"></td><td id="tbl_cr_notes"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="button-row">
+        <button id="copyExcelRowBtn">Copy as Excel Row</button>
+        <button id="addEntryBtn">Save Entry</button>
+    </div>
+</div>
+
+
+
+
+<!-- Full Multi-Trainee Excel Table -->
+<div class="card summary-card" id="fullExcelTableCard">
+    <h2>All Trainees – Excel Table Preview</h2>
+
+    <table id="fullExcelTable">
+        <thead>
+            <tr>
+                <th>Trainee Name</th>
+                <th>PC</th><th>PC Notes</th>
+                <th>GA</th><th>GA Notes</th>
+                <th>LR</th><th>LR Notes</th>
+                <th>FL</th><th>FL Notes</th>
+                <th>CR</th><th>CR Notes</th>
+                <th>Final Score</th>
+            </tr>
+        </thead>
+        <tbody id="fullExcelBody">
+            <!-- Rows will be generated dynamically -->
+        </tbody>
+    </table>
+
+    <button id="copyAllExcelRowsBtn">Copy All as Excel Table</button>
+    <button id="exportExcelBtn">Export to Excel</button>
+</div>
+
+
+<!-- Popup for names -->
+<div id="popupOverlay" style="display: flex;">
+    <div id="popupBox">
+        <h2>Enter Trainee Names (one per line)</h2>
+        <textarea id="nameInput" placeholder="Enter names here..."></textarea>
+        <br><br>
+        <button id="saveNamesBtn">Save Names</button>
+    </div>
+</div>
+
+
+<div class="summary-card" id="rawScoreCard">
+    <h2>Raw LPG & SLPG Score</h2>
+
+    <div>Average: <input type="text" id="avg" readonly placeholder="—"></div>
+    <div>Final Score: <span id="finalScore">0</span></div>
+    <div id="outputDisplay"></div>
+
+    <button id="copyBtn">Copy Entry</button>
+    <button id="viewAllBtn">View All Entries</button>
+    <button id="downloadAllBtn">Download All Entries (.txt)</button>
+</div>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+
+
+// Make sure changes in the names popup mark the form as changed
+document.getElementById("nameInput").addEventListener("input", () => {
+  formChanged = true;
+});
+
+
+// ------------------- Trainee Name Popup -------------------
+const popupOverlay = document.getElementById("popupOverlay");
+if(document.getElementById("traineeName").options.length <= 1){
+    popupOverlay.style.display = "flex";
+} else {
+    popupOverlay.style.display = "none";
+}
+
+document.getElementById("saveNamesBtn").addEventListener("click", () => {
+    const namesText = document.getElementById("nameInput").value;
+    if (!namesText.trim()) { alert("Please enter at least one name."); return; }
+    const names = namesText.split("\n").map(n=>n.trim()).filter(n=>n!=="");
+    const select = document.getElementById("traineeName");
+    select.innerHTML = '<option value="">Select Name</option>';
+    names.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name; opt.textContent = name;
+        select.appendChild(opt);
+    });
+    popupOverlay.style.display = "none";
+});
+
+// ------------------- Scoring Logic -------------------
+function getFinalScore(avg){
+    if(avg === "" || isNaN(avg)) return 0;
+    const score = parseFloat(avg);
+    const scoreMap = [
+        [4.8,4.75],[4.6,4.5],[4.4,4.5],[4.2,4.25],[4.0,4.0],
+        [3.8,3.75],[3.6,3.5],[3.4,3.5],[3.2,3.25],[3.0,3.0],
+        [2.8,2.75],[2.6,2.5],[2.4,2.5],[2.2,2.25]
+    ];
+    for(const [min, val] of scoreMap) if(score >= min) return val;
+    return 0;
+}
+
+function updateAverage(){
+    const ids = ["pc","ga","lr","fl","cr"];
+    
+const values = ids
+  .map(id => {
+    const raw = document.getElementById(id).value.trim();
+    return raw === "" ? NaN : parseFloat(raw);
+  })
+  .filter(v => !isNaN(v));
+
+    const avgField = document.getElementById("avg");
+    const finalSpan = document.getElementById("finalScore");
+
+    if(values.length === 0){
+        avgField.value = "";
+        finalSpan.textContent = "0";
+        finalSpan.classList.add("highlight");
+    } else {
+        const avg = values.reduce((a,b)=>a+b,0)/values.length;
+        avgField.value = avg.toFixed(2);
+        const finalScore = getFinalScore(avg);
+        finalSpan.textContent = finalScore;
+        finalScore === 0 ? finalSpan.classList.add("highlight") : finalSpan.classList.remove("highlight");
+    }
+    updateConsolidated();
+    updateExcelTableCard();
+}
+
+function updateConsolidated(){
+    const ids=["pc","ga","lr","fl","cr"];
+    const avg = document.getElementById("avg").value;
+    const finalScore = getFinalScore(avg);
+    const rawScore = ids.map(id=>document.getElementById(id).value||"0").join(" ")+" = "+(avg||"0");
+
+    const lines = [
+        `Trainee Name: ${document.getElementById("traineeName").value || ""}`,
+        `SLPG Raw Score: ${rawScore}`,
+        `SLPG Final Score: ${finalScore}`,
+        ""
+    ];
+
+    ids.forEach(id=>{
+  const value = document.getElementById(id).value || "";
+  const notes = compileNotesForTable(id + "_text");
+  lines.push(`${id.toUpperCase()}: ${value}`);
+  if (notes) lines.push(notes);
+  lines.push("");
+  });
+
+    document.getElementById("outputDisplay").textContent = lines.join("\n");
+}
+
+// ------------------- Input validation -------------------
+document.querySelectorAll(".numInput").forEach(input=>{
+    input.addEventListener("input", ()=>{
+        input.value = input.value.replace(/[^0-9.]/g,"");
+        const parts = input.value.split(".");
+        if(parts.length>2) input.value = parts[0]+"."+parts[1];
+        updateAverage();
+    });
+});
+
+["pc_text","ga_text","lr_text","fl_text","cr_text","traineeName"].forEach(id=>{
+    document.getElementById(id).addEventListener("input", updateConsolidated);
+    document.getElementById(id).addEventListener("input", updateExcelTableCard);
+});
+
+// ------------------- Multi-entry storage -------------------
+let allEntries = [];
+
+
+function resetAllFields(){
+    document.getElementById("traineeName").value = "";
+    ["pc","ga","lr","fl","cr"].forEach(id=>{
+        document.getElementById(id).value = "";
+        document.getElementById(id+"_text").value = "";
+    });
+
+    // ✅ Clear all selected tags and refresh tag chips/UI
+    clearAllChecklistSelections();
+
+    document.getElementById("finalScore").textContent = "0";
+    document.getElementById("finalScore").classList.add("highlight");
+    document.getElementById("outputDisplay").textContent = "";
+
+
+    // Keep these to ensure preview cards are in sync
+    updateExcelTableCard();
+    updateFullExcelTable();
+    updateAverage();
+}
+
+
+document.getElementById("addEntryBtn").addEventListener("click", () => {
+
+    const trainee = document.getElementById("traineeName").value.trim();
+
+    const fields = [
+        { id: "pc", label: "PC Score" },
+        { id: "ga", label: "GA Score" },
+        { id: "lr", label: "LR Score" },
+        { id: "fl", label: "FL Score" },
+        { id: "cr", label: "CR Score" }
+    ];
+
+    const noteFields = [
+        { id: "pc_text", label: "PC Notes" },
+        { id: "ga_text", label: "GA Notes" },
+        { id: "fl_text", label: "FL Notes" },
+        { id: "lr_text", label: "LR Notes" },
+        { id: "cr_text", label: "CR Notes" }
+    ];
+
+    let missing = [];
+
+    // Check trainee
+    if (!trainee) {
+        missing.push("Trainee Name");
+    }
+
+    // Check scores
+    fields.forEach(field => {
+        const value = document.getElementById(field.id).value.trim();
+        if (!value) {
+            missing.push(field.label);
+        }
+    });
+
+    // Check notes
+    noteFields.forEach(field => {
+        const value = document.getElementById(field.id).value.trim();
+        if (!value) {
+            missing.push(field.label);
+        }
+    });
+
+    if (missing.length > 0) {
+        alert(
+            "Please complete the following before saving:\n\n• " +
+            missing.join("\n• ")
+        );
+        return;
+    }
+
+    // If everything is valid → Save
+    const text = document.getElementById("outputDisplay").textContent.trim();
+    allEntries.push(text);
+
+    updateFullExcelTable();
+
+    alert("Entry saved! Total entries: " + allEntries.length);
+
+    resetAllFields();
+});
+
+
+
+
+
+
+
+document.getElementById("copyBtn").addEventListener("click", ()=>{
+    navigator.clipboard.writeText(document.getElementById("outputDisplay").textContent);
+    alert("Consolidated output copied!");
+});
+
+document.getElementById("downloadAllBtn").addEventListener("click", () => {
+    if(allEntries.length === 0){ alert("No entries to download."); return; }
+    const blob = new Blob([allEntries.join("\n\n=== End of Entry ===\n\n")], {type:'text/plain'});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "all_entries.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+});
+
+document.getElementById("viewAllBtn").addEventListener("click", ()=>{
+    const win = window.open("", "_blank");
+    let content = allEntries.map((entry,i)=>`=== Entry ${i+1} ===\n${entry}`).join("\n\n");
+    win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>All Saved Entries</title></head>
+        <body><pre>${content}</pre></body>
+        </html>
+    `);
+});
+
+// ------------------- Excel Table Cards -------------------
+function updateExcelTableCard(){
+    document.getElementById("tbl_traineeName").textContent = document.getElementById("traineeName").value || "";
+    
+["pc","ga","lr","fl","cr"].forEach(id=>{
+  document.getElementById("tbl_"+id).textContent = document.getElementById(id).value || "";
+  document.getElementById("tbl_"+id+"_notes").textContent = compileNotesForTable(id + "_text");
+});	
+}
+
+document.getElementById("copyExcelRowBtn").addEventListener("click", ()=>{
+    const row = [];
+    ["pc","ga","lr","fl","cr"].forEach(id=>{
+        let score = document.getElementById("tbl_"+id).textContent || "";
+        let notes = document.getElementById("tbl_"+id+"_notes").textContent || "";
+        if(notes.includes('"')) notes = notes.replace(/"/g,'""');
+        if(notes.includes("\n")) notes = `"${notes.replace(/\n/g,"\r\n")}"`;
+        row.push(score, notes);
+    });
+    navigator.clipboard.writeText(row.join("\t")).then(()=>alert("Data copied as Excel row!"));
+});
+
+document.getElementById("copyAllExcelRowsBtn").addEventListener("click", ()=>{
+    let output = "";
+    document.querySelectorAll("#fullExcelBody tr").forEach(row=>{
+        const cells = [...row.querySelectorAll("td")].slice(1,-1);
+        const rowData = cells.map(td=>{
+            let t = td.innerHTML.replace(/<br\s*\/?>/gi,"\n");
+            if(t.includes('"')) t = t.replace(/"/g,'""');
+            return t.includes("\n") ? `"${t}"` : t;
+        });
+        output += rowData.join("\t") + "\n";
+    });
+    navigator.clipboard.writeText(output).then(()=>alert("Excel rows copied WITHOUT trainee name or final score."));
+});
+
+document.getElementById("exportExcelBtn").addEventListener("click", ()=>{
+    const traineeSelect = document.getElementById("traineeName");
+    const allTrainees = Array.from(traineeSelect.options).slice(1).map(opt=>opt.value.trim());
+    const savedData = {};
+
+    allEntries.forEach(entry=>{
+        const lines = entry.split("\n");
+        const name = lines[0].replace("Trainee Name: ","").trim();
+        const finalScore = lines[2].replace("SLPG Final Score: ","").trim();
+
+        // ------------------ FIXED getBlock (only change in entire file) ------------------
+        const getBlock = label => {
+            const idx = lines.findIndex(l => l.startsWith(label + ":"));
+            if (idx === -1) return { score: "", notes: "" };
+
+            let score = lines[idx].replace(label + ":", "").trim();
+            let notes = "";
+            let next = idx + 1;
+
+            const isHeader = line =>
+                ["PC", "GA", "LR", "FL", "CR"].some(key => line.startsWith(key + ":"));
+
+            while (next < lines.length && !isHeader(lines[next]) && lines[next].trim() !== "") {
+                notes += (notes ? "\n" : "") + lines[next];
+                next++;
+            }
+
+            return { score, notes };
+        };
+        // -------------------------------------------------------------------------------
+
+        savedData[name] = {
+            PC:getBlock("PC"), GA:getBlock("GA"), LR:getBlock("LR"),
+            FL:getBlock("FL"), CR:getBlock("CR"), FinalScore:finalScore
+        };
+    });
+
+    const rows = allTrainees.map(name=>{
+        const d = savedData[name] || {PC:{score:"",notes:""}, GA:{score:"",notes:""}, LR:{score:"",notes:""}, FL:{score:"",notes:""}, CR:{score:"",notes:""}, FinalScore:""};
+        return {
+            "Trainee Name": name,
+            "PC": d.PC.score, "PC Notes": d.PC.notes,
+            "GA": d.GA.score, "GA Notes": d.GA.notes,
+            "LR": d.LR.score, "LR Notes": d.LR.notes,
+            "FL": d.FL.score, "FL Notes": d.FL.notes,
+            "CR": d.CR.score, "CR Notes": d.CR.notes,
+            "Final Score": d.FinalScore
+        };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "SLPG Scores");
+    XLSX.writeFile(wb, "SLPG_All_Trainees.xlsx");
+});
+
+function updateFullExcelTable(){
+    const tbody = document.getElementById("fullExcelBody");
+    tbody.innerHTML = "";
+    const traineeSelect = document.getElementById("traineeName");
+    const allTrainees = Array.from(traineeSelect.options).slice(1).map(opt=>opt.value.trim());
+    const savedData = {};
+
+    allEntries.forEach(entry=>{
+        const lines = entry.split("\n");
+        const name = lines[0].replace("Trainee Name: ","").trim();
+        const finalScore = lines[2].replace("SLPG Final Score: ","").trim();
+
+        // ------------------ FIXED getBlock (only change in entire file) ------------------
+        const getBlock = label => {
+            const idx = lines.findIndex(l => l.startsWith(label + ":"));
+            if (idx === -1) return { score: "", notes: "" };
+
+            let score = lines[idx].replace(label + ":", "").trim();
+            let notes = "";
+            let next = idx + 1;
+
+            const isHeader = line =>
+                ["PC", "GA", "LR", "FL", "CR"].some(key => line.startsWith(key + ":"));
+
+            while (next < lines.length && !isHeader(lines[next]) && lines[next].trim() !== "") {
+                notes += (notes ? "\n" : "") + lines[next];
+                next++;
+            }
+
+            return { score, notes };
+        };
+        // -------------------------------------------------------------------------------
+
+        savedData[name] = {
+            PC:getBlock("PC"), GA:getBlock("GA"), LR:getBlock("LR"),
+            FL:getBlock("FL"), CR:getBlock("CR"), FinalScore:finalScore
+        };
+    });
+
+    allTrainees.forEach(name=>{
+        const d = savedData[name] || {PC:{score:"",notes:""}, GA:{score:"",notes:""}, LR:{score:"",notes:""}, FL:{score:"",notes:""}, CR:{score:"",notes:""}, FinalScore:""};
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+    	<td class="tn-cell">
+    <div class="tn-cell-inner">
+        <button class="trainee-circle-btn" title="Copy this trainee's row"></button>
+        <span>${name}</span>
+    	</div>
+	</td>
+            <td>${d.PC.score}</td><td>${d.PC.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.GA.score}</td><td>${d.GA.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.LR.score}</td><td>${d.LR.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.FL.score}</td><td>${d.FL.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.CR.score}</td><td>${d.CR.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.FinalScore}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+
+
+// Copy individual trainee row (Excel-ready, without Final Score)
+document.getElementById("fullExcelBody").addEventListener("click", (e) => {
+    const btn = e.target.closest(".trainee-circle-btn");
+    if (!btn) return;
+
+    const row = btn.closest("tr");
+    if (!row) return;
+
+    // EXCLUDE last column (Final Score)
+    const cells = [...row.querySelectorAll("td")].slice(1, -1).map(td => {
+        let text = td.innerText || "";
+
+        if (text.includes('"')) text = text.replace(/"/g, '""');
+        if (text.includes("\n")) text = `"${text}"`;
+
+        return text;
+    });
+
+    navigator.clipboard.writeText(cells.join("\t"))
+        .then(() => alert("Excel row copied (without Final Score)!"))
+        .catch(() => alert("Copy failed."));
+});
+
+
+
+
+updateExcelTableCard();
+updateFullExcelTable();
+
+
+</script>
+
+
+<!-- Checklist Popup (reused for all buttons) -->
+<div id="checklistPopup" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:10000;">
+    <div id="checklistItems"></div>
+</div>
+
+
+
+
+
+
+
+<script>
+
+
+
+const checklistData = {
+  pc_text: [
+    {
+      category: "Accent",
+      items: [
+        { score: "6", text: "Neutral accent always" },
+        { score: "5", text: "Neutral accent usually" },
+        { score: "4", text: "Mostly neutral accent" },
+        { score: "3", text: "Slight Filipino accent" },
+        { score: "2", text: "Filipino/regional accent" },
+        { score: "1", text: "Strong Filipino/regional accent" },
+      ],
+    },
+    {
+      category: "Stress",
+      items: [
+        { score: "6", text: "No stress errors" },
+        { score: "5", text: "Rare stress errors" },
+        { score: "4", text: "Some stress errors" },
+        { score: "3", text: "Clear stress errors" },
+        { score: "2", text: "Frequent non-neutral accent" },
+        { score: "1", text: "Stress errors hinder comprehension" },
+      ],
+    },
+    {
+      category: "Vowel Sounds",
+      items: [
+        { score: "6", text: "No vowel errors" },
+        { score: "5", text: "Rare vowel errors" },
+        { score: "4", text: "Some vowel errors" },
+        { score: "3", text: "Clear vowel errors" },
+        { score: "2", text: "Frequent vowel errors" },
+        { score: "1", text: "Vowel errors hinder comprehension" },
+      ],
+    },
+    {
+      category: "Consonant Sounds",
+      items: [
+        { score: "6", text: "No consonant errors" },
+        { score: "5", text: "Rare consonant errors" },
+        { score: "4", text: "Some consonant errors" },
+        { score: "3", text: "Clear consonant errors" },
+        { score: "2", text: "Frequent consonant errors" },
+        { score: "1", text: "Consonant errors hinder comprehension" },
+      ],
+    },
+    {
+      category: "Others",
+      items: [
+        { score: "0", text: "Other Errors (liaisons, diphthongs, etc.)" },
+      ],
+    },
+  ],
+
+  ga_text: [
+    {
+      category: "Error Impact",
+      items: [
+        { score: "6", text: "No grammar impact" },
+        { score: "5", text: "Negligible grammar impact" },
+        { score: "4", text: "Minor grammar impact" },
+        { score: "3", text: "Noticeable grammar impact" },
+        { score: "2", text: "Distracting grammar impact" },
+        { score: "1", text: "Very impactful grammar errors" },
+      ],
+    },
+    {
+      category: "Error Frequency",
+      items: [
+        { score: "6", text: "No grammar errors" },
+        { score: "5", text: "Rare grammar errors" },
+        { score: "4", text: "Some grammar errors" },
+        { score: "3", text: "Clear grammar errors" },
+        { score: "2", text: "Frequent grammar errors" },
+        { score: "1", text: "Very frequent grammar errors" },
+      ],
+    },
+      ],
+
+  lr_text: [
+    {
+      category: "Sophisticated Expressions",
+      items: [
+        { score: "6", text: "Uses sophisticated expressions" },
+      ],
+    },
+    {
+      category: "Word Searching",
+      items: [
+        { score: "5", text: "Does not grope" },
+        { score: "4", text: "Gropes for certain words" },
+        { score: "3", text: "Gropes for words" },
+      ],
+    },
+    {
+      category: "Language Appropriateness",
+      items: [
+        { score: "5", text: "Uses words clearly and appropriately" },
+        { score: "4", text: "Occasionally uses unsuitable words" },
+        { score: "3", text: "Frequently uses unsuitable words" },
+        { score: "2", text: "Uses words without meaning" },
+      ],
+    },
+    {
+      category: "Filipinoisms",
+      items: [
+        { score: "3", text: "Occasionally uses Filipinoisms/vernacular" },
+        { score: "2", text: "Frequent vernacular, impacts comprehension" },
+      ],
+    },
+    {
+      category: "Others",
+      items: [
+        { score: "0", text: "Other Errors (Filipino-English mistranslations, jargon, etc.)" },
+      ],
+    },
+  ],
+
+  fl_text: [
+    {
+      category: "Spontaneity",
+      items: [
+        { score: "6", text: "Spontaneous and conversational" },
+        { score: "4", text: "Conversational" },
+        { score: "3", text: "Can be conversational" },
+        { score: "2", text: "Attempts spontaneity, pauses disrupt flow" },
+        { score: "1", text: "Not spontaneous" },
+      ],
+    },
+    {
+      category: "Confidence",
+      items: [
+        { score: "6", text: "Confident, dynamic tone, appropriate pacing" },
+        { score: "4", text: "Continuous, certain speech" },
+        { score: "3", text: "Uncertain, sluggish pacing" },
+        { score: "2", text: "Noticeable stutters and stammers" },
+        { score: "1", text: "Excessive stutters and stammers" },
+      ],
+    },
+    {
+      category: "Gaps and Pauses",
+      items: [
+        { score: "6", text: "No gaps or pauses" },
+        { score: "5", text: "Barely noticeable pauses" },
+        { score: "4", text: "Sporadic gaps, fillers, thinking words" },
+        { score: "3", text: "Occasional pauses affecting flow" },
+        { score: "2", text: "Long pauses between words/sentences" },
+        { score: "1", text: "Pauses excessively" },
+      ],
+    },
+    {
+      category: "Repetition",
+      items: [
+        { score: "6", text: "No corrections or repetition" },
+      ],
+    },
+    {
+      category: "Others",
+      items: [
+        { score: "0", text: "Other Errors (tone, rate of speech, pitch, etc.)" },
+      ],
+    },
+  ],
+
+  cr_text: [
+    {
+      category: "Comprehension",
+      items: [
+        { score: "6", text: "Understands easily" },
+        { score: "5", text: "Occasionally asks for clarification" },
+        { score: "4", text: "Asks for occasional paraphrasing" },
+        { score: "3", text: "Needs most questions repeated" },
+        { score: "2", text: "Needs all questions clarified" },
+        { score: "1", text: "Needs repeated questions multiple times" },
+      ],
+    },
+    {
+      category: "Relevance and Justification",
+      items: [
+        { score: "6", text: "Clearly communicates with support" },
+        { score: "5", text: "Always answers correctly" },
+        { score: "4", text: "Mostly correct, with some errors" },
+        { score: "3", text: "Incomplete or one-word answers" },
+        { score: "2", text: "Often incomplete or one-word answers" },
+        { score: "1", text: "Always off-topic" },
+      ],
+    },
+    {
+      category: "Comprehensive Follow-Up",
+      items: [
+        { score: "4", text: "Occasionally needs to elaborate" },
+        { score: "3", text: "Frequently needs to elaborate" },
+	{ score: "2", text: "Always needs to elaborate" },
+        { score: "1", text: "Always needs to elaborate" },
+      ],
+    },
+    {
+      category: "Logical Sequence",
+      items: [
+        { score: "6", text: "Clear, logical sequence" },
+        { score: "5", text: "Rare transition errors" },
+        { score: "4", text: "Occasional transition errors" },
+        { score: "3", text: "Disjointed ideas, hard to follow" },
+        { score: "2", text: "Mostly disjointed, hard to follow" },
+        { score: "1", text: "No logical sequence, confusing" },
+      ],
+    },
+    {
+      category: "Others",
+      items: [
+        { score: "0", text: "Other Errors (thought formats, transitions, etc.)" },
+      ],
+    },
+  ],
+};
+
+
+let currentTextarea = null;
+
+// Create popup and handle checkbox changes
+document.querySelectorAll(".pc-circle-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+  const textarea = btn.parentElement.querySelector("textarea");
+  currentTextarea = textarea;
+
+  // Remove existing popup if any
+  document.querySelectorAll(".checklist-popup").forEach(p => p.remove());
+
+  // Create popup container
+  const popup = document.createElement("div");
+  popup.className = "checklist-popup";
+
+  // Get groups by category now
+  const groups = checklistData[textarea.id] || [];
+
+  groups.forEach(group => {
+    // Add category header
+    const header = document.createElement("div");
+    header.textContent = group.category;
+    header.style.fontWeight = "bold";
+    header.style.margin = "8px 0 4px 0";
+    header.style.fontSize = "1.1em";
+    popup.appendChild(header);
+
+    // Add checkboxes
+    group.items.forEach(item => {
+      const label = document.createElement("label");
+      label.style.display = "block";
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+
+      // Use the unique string with score + text as value, to track selections
+      checkbox.value = `${item.score} ${item.text}`;
+
+      // Check if already selected
+      checkbox.checked = selectedChecklist[textarea.id]?.has(checkbox.value) || false;
+
+      label.appendChild(checkbox);
+
+      // Show score + text as label
+      label.appendChild(document.createTextNode(` ${item.score} ${item.text}`));
+
+      popup.appendChild(label);
+    });
+  });
+
+  document.body.appendChild(popup);
+
+  // Position popup near button (your existing positioning code)
+  const rect = btn.getBoundingClientRect();
+  let top = rect.bottom + window.scrollY + 5;
+  let left = rect.left + window.scrollX;
+
+  if (top + popup.offsetHeight > window.scrollY + window.innerHeight) {
+    top = rect.top + window.scrollY - popup.offsetHeight - 5;
+  }
+  if (left + popup.offsetWidth > window.scrollX + window.innerWidth) {
+    left = window.scrollX + window.innerWidth - popup.offsetWidth - 5;
+  }
+
+  popup.style.top = top + "px";
+  popup.style.left = left + "px";
+
+  // Checkbox change handler (your existing code)
+  popup.addEventListener("change", (e) => {
+    if (e.target.tagName !== "INPUT") return;
+
+    const textareaId = currentTextarea.id;
+    const cb = e.target;
+    if (!selectedChecklist[textareaId]) selectedChecklist[textareaId] = new Set();
+
+    if (cb.checked) selectedChecklist[textareaId].add(cb.value);
+    else selectedChecklist[textareaId].delete(cb.value);
+
+    // Refresh tags + dependent views
+    renderTagsForTextarea(textareaId);
+    updateConsolidated();
+    updateExcelTableCard();
+    updateFullExcelTable();
+  });
+});
+});
+
+// Optional: click outside to close popup
+document.addEventListener("click", (e)=>{
+    if(!e.target.closest(".pc-circle-btn") && !e.target.closest(".checklist-popup")){
+        document.querySelectorAll(".checklist-popup").forEach(p => p.remove());
+    }
+});
+
+
+
+/** ============================================
+ *  HIDDEN DATA STORE + TAG RENDERING (CHIPS)
+ *  ============================================ */
+
+// Hidden store of selected checklist bullets per notes field
+const selectedChecklist = {
+  pc_text: new Set(),
+  ga_text: new Set(),
+  lr_text: new Set(),
+  fl_text: new Set(),
+  cr_text: new Set()
+};
+
+// Create tagbar elements right after each notes textarea
+(function initTagbars(){
+  ["pc_text","ga_text","lr_text","fl_text","cr_text"].forEach(id=>{
+    const ta = document.getElementById(id);
+    if(!ta) return;
+    const tagbar = document.createElement("div");
+    tagbar.className = "tagbar";
+    tagbar.id = id + "_tags";
+    ta.insertAdjacentElement("afterend", tagbar);
+    renderTagsForTextarea(id);
+  });
+})();
+
+// Utility: find the header (6..0) for a checklist item
+function findHeaderForItem(textareaId, item){
+  const groups = checklistData[textareaId] || [];
+  for(const g of groups){
+    if(g.items.includes(item)) return g.header;
+  }
+  return "";
+}
+
+// Renders the tags from selectedChecklist under the given textarea
+
+
+
+function renderTagsForTextarea(textareaId){
+  const tagbar = document.getElementById(textareaId + "_tags");
+  if(!tagbar) return;
+  tagbar.innerHTML = "";
+
+  const selectedSet = selectedChecklist[textareaId] || new Set();
+  if(selectedSet.size === 0) return;
+
+  // We want to render in original category and item order, so iterate checklistData
+  
+const groups = checklistData[textareaId] || [];
+
+  groups.forEach(group => {
+    group.items.forEach(item => {
+      const fullValue = `${item.score} ${item.text}`;
+      if(!selectedSet.has(fullValue)) return;
+
+      // Badge is the score (number)
+      const badge = item.score;
+
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.dataset.item = fullValue;
+      tag.dataset.textarea = textareaId;
+
+      const badgeEl = document.createElement("span");
+      badgeEl.className = "badge h" + (badge || "0");
+      badgeEl.textContent = badge;
+
+      const labelEl = document.createElement("span");
+      labelEl.className = "label";
+      labelEl.textContent = item.text;
+
+      const closeEl = document.createElement("span");
+      closeEl.className = "close";
+      closeEl.textContent = "×";
+
+      tag.appendChild(badgeEl);
+      tag.appendChild(labelEl);
+      tag.appendChild(closeEl);
+      tagbar.appendChild(tag);
+    });
+  });
+}
+
+// Clicking the × on a tag removes it from the hidden store,
+// unticks the popup checkbox (if open), and updates UI/exports.
+document.addEventListener("click", (e)=>{
+  const close = e.target.closest(".tag .close");
+  if(!close) return;
+
+  const tag = close.closest(".tag");
+  const item = tag.dataset.item;
+  const textareaId = tag.dataset.textarea;
+
+  // 1) Update hidden store
+  if(selectedChecklist[textareaId]) {
+    selectedChecklist[textareaId].delete(item);
+  }
+
+  // 2) Uncheck in popup if visible
+  document.querySelectorAll(".checklist-popup input[type=checkbox]").forEach(cb=>{
+    if(cb.value === item) cb.checked = false;
+  });
+
+  // 3) Refresh chips and all dependent outputs
+  renderTagsForTextarea(textareaId);
+  updateConsolidated();
+  updateExcelTableCard();
+  updateFullExcelTable();
+});
+
+
+// Compile notes for export/display:
+//   - first: selected tags (in original group/item order, each on its own line)
+//   - then: free-form notes from the textarea (verbatim)
+function compileNotes(textareaId){
+  const ta = document.getElementById(textareaId);
+  const freeForm = (ta?.value || "").split("\n").filter(Boolean);
+
+  const groups = checklistData[textareaId] || [];
+  const selected = [];
+
+  for(const g of groups){
+    for(const item of g.items){
+      const fullValue = `${item.score} ${item.text}`; // ✅ match the checkbox value
+      if(selectedChecklist[textareaId]?.has(fullValue)) selected.push(fullValue);
+    }
+  }
+
+  // Join selected (tags) plus free-form notes
+  return [...selected, ...freeForm].join("\n");
+}
+
+
+// Clear all checklist selections and re-render tag chips
+function clearAllChecklistSelections() {
+  // 1) Empty the sets
+  Object.keys(selectedChecklist).forEach(key => selectedChecklist[key].clear());
+
+  // 2) Re-render the tagbars (chips)
+  ["pc_text","ga_text","lr_text","fl_text","cr_text"].forEach(id => renderTagsForTextarea(id));
+
+  // 3) Close any open popup to avoid stale checkboxes
+  document.querySelectorAll(".checklist-popup").forEach(p => p.remove());
+
+  // 4) Refresh dependent views
+  updateConsolidated();
+  updateExcelTableCard();
+}
+
+let formChanged = false;
+document.querySelectorAll("input, textarea, select").forEach(el=>{
+    el.addEventListener("input", ()=>{ formChanged=true; });
+});
+window.addEventListener("beforeunload", (e) => {
+  if (!formChanged) return;
+  e.preventDefault();
+  e.returnValue = "";
+  return "";
+});
+
+
+//Excel Card Formatting
+
+
+
+// ------------------ Subcategory Classifiers ------------------
+
+// PC classifier (already discussed)
+function classifyPCNote(note) {
+    // Normalize separators: -, >, vs, |, ~, /, :, → flexible matching
+    const parts = note.split(/-|>|vs|\||~|\/|:/i).map(p => p.trim());
+
+    // If we have less than 2 parts, fallback to Others
+    if (parts.length < 2) return "Others";
+
+    // Only take the first two parts
+    const [aRaw, bRaw] = parts;
+
+    // Remove parenthetical notes, extra punctuation
+    const clean = str => str.replace(/[(){}[\]]/g, "").trim();
+    const a = clean(aRaw);
+    const b = clean(bRaw);
+
+    //Stress → same letters, different capitalization
+    if (a.toLowerCase() === b.toLowerCase() && a !== b) {
+        return "Stress";
+    }
+
+    // Extract consonants and vowels
+    const consonants = str => str.replace(/[aeiou]/gi, "");
+    const vowels = str => str.replace(/[^aeiou]/gi, "");
+
+    const aCons = consonants(a);
+    const bCons = consonants(b);
+
+    const aVow = vowels(a);
+    const bVow = vowels(b);
+
+    //Vowel difference → consonants same
+    if (aCons === bCons && aVow !== bVow) {
+        return "Vowel Sounds";
+    }
+
+    //Consonant difference → consonants differ
+    if (aCons !== bCons) {
+        return "Consonant Sounds";
+    }
+
+    //If both are identical (exact match) → treat as Accent or leave Others
+    if (a === b) {
+        return "Accent";
+    }
+
+    //Fallback
+    return "Others";
+}
+
+// GA classifier: very basic heuristics for grammar impact & frequency
+function classifyGANote(note) {
+    const n = note.trim();
+
+    //Check for obvious high-impact errors
+    const impactKeywords = /(noticeable|sometimes|always|forgets|articles|pronouns|distracting|very|incomprehensible|confusing|unclear)/i;
+    if (impactKeywords.test(n)) return "Error Frequency";
+
+    // Fallback → Others
+    return "Error Impact";
+}
+
+// LR classifier: heuristics for sophisticated expressions, word searching, appropriateness, filipinoisms
+function classifyLRNote(note) {
+    // Sophisticated Expressions
+    if (/sophisticated/i.test(note)) return "Sophisticated Expressions";
+
+    // Word Searching
+    if (/grope|search|cannot think|forgot word|look|looking|hesitate/i.test(note)) return "Word Searching";
+
+    // Language Appropriateness
+    if (/utilize|very sufficient|instead of|inappropriate|happy excited|incorrect word|wrong term|odd phrasing|does not make sense/i.test(note)) 
+        return "Language Appropriateness";
+
+    // Filipinoisms (expanded)
+    if (/\b(undergrad|ref|open the light|close the light|fill up|for a while|ate|kuya|tita|tito|ano|next next week|next next month|last last week|last last month|kilig|filled up|fall in line|cellphone|dine in|take out|comfort room|as in|in fairness|wala|kasi|nga|ba|di|na|pa|rin|minsan|tagalog word|repeated word|repetition|literal translation|jargon|slang|bisaya|tita|ilocano|cebuano|taglish)\b/i.test(note)) 
+        return "Filipinoisms";
+
+    // Catch-all
+    return "Others";
+}
+// FL classifier: heuristics for spontaneity, confidence, gaps/pauses, repetition
+function classifyFLNote(note) {
+    const lower = note.toLowerCase();
+
+    // Spontaneity → general flow, conversational
+    const spontPatterns = [
+        /\bspontaneous\b/i,
+        /\bconversational\b/i,
+        /\bfluid\b/i
+    ];
+    if (spontPatterns.some(rx => rx.test(note))) return "Spontaneity";
+
+    // Confidence → tone, pacing, stutters/stammers
+    const confidencePatterns = [
+        /\bconfident\b/i,
+        /\bdynamic\b/i,
+        /\bassertive\b/i,
+        /\bclear(ly)? (speech|tone|delivery)\b/i,
+        /\bstammer(s|ed)?\b/i,   // Added
+        /\bstutter(s|ed)?\b/i    // Added
+    ];
+    if (confidencePatterns.some(rx => rx.test(note))) return "Confidence";
+
+    // Gaps and Pauses → literal pauses, long thinking, fillers
+    const gapPatterns = [
+        /\buh{1,4}\b/i,
+        /\buhm{1,4}\b/i,
+        /\bso{1,4}\b/i,
+        /\bah{1,4}\b/i,
+	/\bahm{1,4}\b/i,
+        /\ba{2,}\b/i,
+        /\blike\b/i,
+        /\byeah\b/i,
+        /\byes\b/i,
+        /\b(repeat(ed)?|again)\b/i,
+        /\bfiller(s)?\b/i,
+        /\bpause(s)?\b/i,
+        /\bgap(s)?\b/i
+    ];
+    if (gapPatterns.some(rx => rx.test(note))) return "Gaps and Pauses";
+
+    //  Repetition/Correction → corrections, repeated words, editing mid-speech
+    const repeatPatterns = [
+        /\bcorrect(ion|ed)?\b/i,
+        /\brepeat(ed)?\b/i,
+        /\brephrased\b/i
+    ];
+    if (repeatPatterns.some(rx => rx.test(note))) return "Repetition";
+
+    // Default → Others
+    return "Others";
+}
+
+// CR classifier: comprehension, relevance, follow-up, logical sequence
+function classifyCRNote(note) {
+    const lower = note.toLowerCase();
+
+    // Comprehension → candidate didn’t understand or needed clarification
+    if (/(understand|didn'?t catch|not able|was not able to|paraphrased|rephrased|clarif(y|ication)|repeat|say again|not get|confused|lost me|what\??)/i.test(lower)) {
+        return "Comprehension";
+    }
+
+    // Relevance and Justification → answers off-topic or unsupported
+    if (/(correct|correctly|support|justify|reason|evidence|relevant|irrelevant|off-topic|on topic|incorrect|incorrectly|explain|why|explanation)/i.test(lower)) {
+        return "Relevance and Justification";
+    }
+
+    // Comprehensive Follow-Up → candidate needs prompting to elaborate
+    if (/(elaborate|expand|more detail|explain further|tell me more|can you explain|provide examples|describe)/i.test(lower)) {
+        return "Comprehensive Follow-Up";
+    }
+
+    // Logical Sequence → disjointed, confusing, or poorly ordered ideas
+    if (/(sequence|order|confusing|disjointed|jumped|switched|proceeded to|started talking about|random|unclear|messy|hard to follow|disconnected)/i.test(lower)) {
+        return "Logical Sequence";
+    }
+
+    // Anything else goes under Others
+    return "Others";
+}
+
+// Map textareaId → classifier function
+const noteClassifiers = {
+    "pc_text": classifyPCNote,
+    "ga_text": classifyGANote,
+    "lr_text": classifyLRNote,
+    "fl_text": classifyFLNote,
+    "cr_text": classifyCRNote
+};
+
+// ------------------ Updated compileNotesForTable  ------------------
+function compileNotesForTable(textareaId){
+    const ta = document.getElementById(textareaId);
+    const freeForm = (ta?.value || "").split("\n").filter(Boolean);
+    const groups = checklistData[textareaId] || [];
+
+    // ---------------- HANDLE PC ----------------
+    if (textareaId === "pc_text") {
+        const categoryNotes = {
+            "Accent": [],
+            "Stress": [],
+            "Vowel Sounds": [],
+            "Consonant Sounds": [],
+            "Others": []
+        };
+
+        freeForm.forEach(note => {
+            const cat = classifyPCNote(note);
+            categoryNotes[cat].push("- " + note);
+        });
+
+        const result = [];
+
+        groups.forEach(g => {
+            g.items.forEach(item => {
+                const fullValue = `${item.score} ${item.text}`;
+                if (selectedChecklist[textareaId]?.has(fullValue)) {
+                    result.push("• " + item.text);
+                }
+            });
+
+            result.push(...categoryNotes[g.category]);
+        });
+
+        return result.join("\n");
+    }
+
+    // ---------------- HANDLE GA ----------------
+    if (textareaId === "ga_text") {
+        const categoryNotes = {
+            "Error Impact": [],
+            "Error Frequency": [],
+            "Others": []
+        };
+
+        freeForm.forEach(note => {
+            const cat = classifyGANote(note);
+            categoryNotes[cat].push("- " + note);
+        });
+
+        const result = [];
+
+        groups.forEach(g => {
+            g.items.forEach(item => {
+                const fullValue = `${item.score} ${item.text}`;
+                if (selectedChecklist[textareaId]?.has(fullValue)) {
+                    result.push("• " + item.text);
+                }
+            });
+
+            result.push(...categoryNotes[g.category]);
+        });
+
+        return result.join("\n");
+    }
+
+
+    // ---------------- HANDLE LR---------------
+
+if (textareaId === "lr_text") {
+    const categoryNotes = {
+        "Sophisticated Expressions": [],
+        "Word Searching": [],
+        "Language Appropriateness": [],
+        "Filipinoisms": [],
+        "Others": []
+    };
+
+    freeForm.forEach(note => {
+        const cat = classifyLRNote(note);
+        categoryNotes[cat].push("- " + note); // note the dash for bullets
+    });
+
+    const result = [];
+
+    groups.forEach(g => {
+        g.items.forEach(item => {
+            const fullValue = `${item.score} ${item.text}`;
+            if (selectedChecklist[textareaId]?.has(fullValue)) {
+                result.push("• " + item.text); // keep checklist items as bullets
+            }
+        });
+
+        result.push(...categoryNotes[g.category]);
+    });
+
+    return result.join("\n");
+}
+
+// ------------------ Handle FL (Fluency) ------------------
+if (textareaId === "fl_text") {
+    const categoryNotes = {
+        "Spontaneity": [],
+        "Confidence": [],
+        "Gaps and Pauses": [],
+        "Repetition": [],
+        "Others": []
+    };
+
+    // Classify each free-form note
+    freeForm.forEach(note => {
+        const cat = classifyFLNote(note);
+        categoryNotes[cat].push("- " + note); // freeform uses "-"
+    });
+
+    const result = [];
+
+    // Loop in checklist order
+    groups.forEach(g => {
+        // Add checked items
+        g.items.forEach(item => {
+            const fullValue = `${item.score} ${item.text}`;
+            if (selectedChecklist[textareaId]?.has(fullValue)) {
+                result.push("• " + item.text); // checklist items keep "•"
+            }
+        });
+
+        // Add notes under that category
+        result.push(...categoryNotes[g.category]);
+    });
+
+    return result.join("\n");
+}
+
+// ------------------ Handle CR (Comprehension/Response) compileNotesForTable ------------------
+if (textareaId === "cr_text") {
+    const categoryNotes = {
+        "Comprehension": [],
+        "Relevance and Justification": [],
+        "Comprehensive Follow-Up": [],
+        "Logical Sequence": [],
+        "Others": []
+    };
+
+    // Classify each free-form note
+    freeForm.forEach(note => {
+        const cat = classifyCRNote(note);
+        categoryNotes[cat].push("- " + note); // freeform uses "-"
+    });
+
+    const result = [];
+
+    // Loop in checklist order
+    groups.forEach(g => {
+        // Add checked items
+        g.items.forEach(item => {
+            const fullValue = `${item.score} ${item.text}`;
+            if (selectedChecklist[textareaId]?.has(fullValue)) {
+                result.push("• " + item.text); // checklist items keep "•"
+            }
+        });
+
+        // Add notes under that category
+        result.push(...categoryNotes[g.category]);
+    });
+
+    return result.join("\n");
+}
+    // ---------------- FALLBACK FOR OTHER TEXTAREAS ----------------
+    const selected = [];
+
+    for (const g of groups) {
+        for (const item of g.items) {
+            const fullValue = `${item.score} ${item.text}`;
+            if (selectedChecklist[textareaId]?.has(fullValue)) {
+                selected.push("- " + item.text);
+            }
+        }
+    }
+
+    return [...selected, ...freeForm.map(line => "- " + line)].join("\n");
+}
+
+/* =====================================================
+   SMART EVALUATOR PHRASE LIBRARY (Enhanced)
+   - Debounced matching
+   - startsWith > includes ranking
+   - Arrow keys, Enter, Esc
+   - Safer localStorage
+   - Blur/scroll/resize cleanup
+   - Caret-aware line replacement (end-of-line)
+===================================================== */
+
+(function () {
+  const MIN_QUERY_LEN = 2;
+  const MAX_SUGGESTIONS = 8;
+  const DEBOUNCE_MS = 150;
+
+  let suggestionBox = null;
+  let highlightedIndex = -1;
+  let currentTextarea = null;
+  let currentSuggestions = [];
+
+  /* ---------------- Storage helpers ---------------- */
+  function getPhraseLibrary() {
+    try {
+      return JSON.parse(localStorage.getItem("phraseLibrary") || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function setPhraseLibrary(lib) {
+    try {
+      localStorage.setItem("phraseLibrary", JSON.stringify(lib));
+    } catch {
+      // If quota exceeded, we can prune later or ignore
+    }
+  }
+
+  function normalizePhrase(phrase) {
+    // Trim, collapse multiple spaces, remove trailing punctuation-only lines
+    let p = phrase.replace(/\s+/g, " ").trim();
+    // Toss very short fragments
+    if (p.length < 6) return "";
+    return p;
+  }
+
+  function savePhrase(category, phrase) {
+    const norm = normalizePhrase(phrase);
+    if (!norm) return;
+    const lib = getPhraseLibrary();
+    if (!lib[category]) lib[category] = {};
+    if (!lib[category][norm]) lib[category][norm] = 0;
+    lib[category][norm] += 1;
+    setPhraseLibrary(lib);
+  }
+
+  function getSuggestions(category, query) {
+    const lib = getPhraseLibrary();
+    if (!lib[category]) return [];
+    const q = query.toLowerCase();
+
+    const entries = Object.keys(lib[category]).map((text) => ({
+      text,
+      score: lib[category][text] || 1
+    }));
+
+    // Rank: startsWith first (higher), then includes; tie-break by frequency
+    const startsWith = [];
+    const includes = [];
+
+    for (const e of entries) {
+      const t = e.text.toLowerCase();
+      if (t.startsWith(q)) startsWith.push(e);
+      else if (t.includes(q)) includes.push(e);
+    }
+
+    startsWith.sort((a, b) => b.score - a.score);
+    includes.sort((a, b) => b.score - a.score);
+
+    return [...startsWith, ...includes]
+      .slice(0, MAX_SUGGESTIONS)
+      .map((e) => e.text);
+  }
+
+  /* ---------------- Debounce utility ---------------- */
+  function debounce(fn, ms) {
+    let t;
+    return function (...args) {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), ms);
+    };
+  }
+
+  /* ---------------- Suggestion UI ---------------- */
+  function ensureSuggestionBox() {
+    if (suggestionBox) return suggestionBox;
+    suggestionBox = document.createElement("div");
+    suggestionBox.className = "smart-suggestions";
+    document.body.appendChild(suggestionBox);
+    return suggestionBox;
+  }
+
+  function clearSuggestionBox() {
+    highlightedIndex = -1;
+    currentSuggestions = [];
+    if (suggestionBox) {
+      suggestionBox.remove();
+      suggestionBox = null;
+    }
+  }
+
+  function positionSuggestionBoxNearTextarea(ta) {
+    if (!suggestionBox) return;
+    // Anchor below the textarea (simple & reliable)
+    const rect = ta.getBoundingClientRect();
+    suggestionBox.style.left = rect.left + window.scrollX + "px";
+    suggestionBox.style.top = rect.bottom + window.scrollY + "px";
+    suggestionBox.style.width = rect.width + "px";
+    suggestionBox.style.zIndex = 9999;
+  }
+
+  function renderSuggestions(ta, suggestions) {
+    if (!suggestions.length) {
+      clearSuggestionBox();
+      return;
+    }
+
+    const box = ensureSuggestionBox();
+    box.innerHTML = "";
+    currentSuggestions = suggestions;
+    highlightedIndex = -1;
+
+    suggestions.forEach((text, idx) => {
+      const item = document.createElement("div");
+      item.className = "smart-item";
+      item.textContent = text;
+      item.setAttribute("role", "option");
+      item.setAttribute("aria-selected", "false");
+
+      item.addEventListener("mouseenter", () => {
+        setHighlightedIndex(idx);
+      });
+
+      item.addEventListener("mousedown", (e) => {
+        // Prevent textarea blur before we insert
+        e.preventDefault();
+        acceptSuggestion(idx);
+      });
+
+      box.appendChild(item);
+    });
+
+    positionSuggestionBoxNearTextarea(ta);
+  }
+
+  function setHighlightedIndex(newIndex) {
+    const items = suggestionBox
+      ? Array.from(suggestionBox.querySelectorAll(".smart-item"))
+      : [];
+    if (!items.length) return;
+
+    // Clear previous
+    if (highlightedIndex >= 0 && items[highlightedIndex]) {
+      items[highlightedIndex].style.background = "";
+      items[highlightedIndex].setAttribute("aria-selected", "false");
+    }
+
+    highlightedIndex = newIndex;
+
+    if (highlightedIndex >= 0 && items[highlightedIndex]) {
+      items[highlightedIndex].style.background = "#f0f0f0";
+      items[highlightedIndex].setAttribute("aria-selected", "true");
+      // Ensure visibility inside box
+      items[highlightedIndex].scrollIntoView({ block: "nearest" });
+    }
+  }
+
+  function moveHighlight(delta) {
+    if (!suggestionBox || !currentSuggestions.length) return;
+    const newIndex = (highlightedIndex + delta + currentSuggestions.length) % currentSuggestions.length;
+    setHighlightedIndex(newIndex);
+  }
+
+  function getCurrentLineAndIndex(ta) {
+    // Split by lines and compute the index of the last line based on caret
+    const value = ta.value;
+    const selStart = ta.selectionStart ?? value.length;
+    const before = value.slice(0, selStart);
+    const lines = before.split("\n");
+    const currentLineText = lines[lines.length - 1];
+    return { currentLineText, selStart, linesBefore: lines.length };
+  }
+
+  function replaceCurrentLineWith(ta, text) {
+    const value = ta.value;
+    const selStart = ta.selectionStart ?? value.length;
+    const selEnd = ta.selectionEnd ?? value.length;
+    // Find start of current line
+    const before = value.slice(0, selStart);
+    const after = value.slice(selEnd);
+
+    const lastNewlineIdx = before.lastIndexOf("\n");
+    const lineStart = lastNewlineIdx === -1 ? 0 : lastNewlineIdx + 1;
+
+    const replaced =
+      value.slice(0, lineStart) + text + value.slice(selStart) /* keep the rest of that line + after */;
+    ta.value = replaced;
+
+    // Place caret at end of inserted text (on that line)
+    const newCaretPos = lineStart + text.length;
+    ta.setSelectionRange(newCaretPos, newCaretPos);
+    ta.focus();
+  }
+
+  function acceptSuggestion(idx) {
+    if (!currentTextarea || !currentSuggestions.length) return;
+    const i = idx >= 0 ? idx : highlightedIndex;
+    if (i < 0) return;
+
+    const best = currentSuggestions[i];
+    replaceCurrentLineWith(currentTextarea, best);
+    clearSuggestionBox();
+  }
+
+  /* ---------------- Event wiring ---------------- */
+  const handleInput = debounce((e) => {
+    const ta = e.target;
+    if (!(ta instanceof HTMLTextAreaElement)) return;
+    currentTextarea = ta;
+
+    const category = ta.dataset.category;
+    if (!category) {
+      clearSuggestionBox();
+      return;
+    }
+
+    // Current "line" fragment (after last newline)
+    const { currentLineText } = getCurrentLineAndIndex(ta);
+    const q = currentLineText.trim();
+
+    if (q.length < MIN_QUERY_LEN) {
+      clearSuggestionBox();
+      return;
+    }
+
+    const suggestions = getSuggestions(category, q);
+    if (!suggestions.length) {
+      clearSuggestionBox();
+      return;
+    }
+
+    renderSuggestions(ta, suggestions);
+  }, DEBOUNCE_MS);
+
+  function handleKeyDown(e) {
+    const ta = e.target;
+    if (!(ta instanceof HTMLTextAreaElement) || !ta.dataset.category) return;
+
+    // Navigation only when box exists
+    if (!suggestionBox || !currentSuggestions.length) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      moveHighlight(+1);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      moveHighlight(-1);
+    } else if (e.key === "Enter") {
+      // Accept if a suggestion is highlighted; otherwise allow newline
+      if (highlightedIndex >= 0) {
+        e.preventDefault();
+        acceptSuggestion(highlightedIndex);
+      }
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      clearSuggestionBox();
+    } else if (e.key === "Tab") {
+      // Keep your original Tab-to-accept behavior on the top suggestion
+      if (currentSuggestions.length) {
+        e.preventDefault();
+        acceptSuggestion(highlightedIndex >= 0 ? highlightedIndex : 0);
+      }
+    }
+  }
+
+  function handleBlur(e) {
+    // Give mousedown on suggestion chance to fire (use microtask)
+    setTimeout(() => {
+      if (document.activeElement !== currentTextarea) {
+        clearSuggestionBox();
+      }
+    }, 0);
+  }
+
+  function handleScrollOrResize() {
+    if (!currentTextarea || !suggestionBox) return;
+    positionSuggestionBoxNearTextarea(currentTextarea);
+  }
+
+  // Attach listeners to all data-category textareas
+  const noteAreas = Array.from(document.querySelectorAll("textarea[data-category]"));
+  noteAreas.forEach((ta) => {
+    ta.addEventListener("input", handleInput);
+    ta.addEventListener("keydown", handleKeyDown);
+    ta.addEventListener("blur", handleBlur);
+  });
+
+  // Cleanup on layout changes
+  window.addEventListener("scroll", handleScrollOrResize, true);
+  window.addEventListener("resize", handleScrollOrResize);
+
+  /* --------- Learning cadence: save when entry is saved --------- */
+  // Keep your existing "Save Entry" learning but with normalization
+  const addEntryBtn = document.getElementById("addEntryBtn");
+  if (addEntryBtn) {
+    addEntryBtn.addEventListener("click", () => {
+      noteAreas.forEach((ta) => {
+        const category = ta.dataset.category;
+        if (!category) return;
+        ta.value
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .forEach((line) => savePhrase(category, line));
+      });
+    });
+  }
+
+  /* --------- Optional: Learn immediately as evaluators type ---------
+     If you want immediate learning of completed lines (when user presses Enter),
+     uncomment the code below:
+
+  noteAreas.forEach((ta) => {
+    ta.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const category = ta.dataset.category;
+        if (!category) return;
+        const { currentLineText } = getCurrentLineAndIndex(ta);
+        const norm = normalizePhrase(currentLineText);
+        if (norm) savePhrase(category, norm);
+      }
+    });
+  });
+  */
+
+})();
+
+
+</script>
 </body>
 </html>
+
+
 
