@@ -708,8 +708,60 @@ document.querySelectorAll(".numInput").forEach(input=>{
     document.getElementById(id).addEventListener("input", updateExcelTableCard);
 });
 
+
+["pc","ga","lr","fl","cr"].forEach(id => {
+
+    document.getElementById(id).addEventListener("input", (e) => {
+
+        const value = e.target.value.trim();
+
+        // Only run for whole numbers 1-6
+        if (/^[0-6]$/.test(value)) {
+            autoSelectChecklistByScore(id, value);
+        }
+    });
+
+});
+
 // ------------------- Multi-entry storage -------------------
 let allEntries = [];
+
+
+function saveDraft() {
+
+    const draft = {
+
+        traineeName: document.getElementById("traineeName").value,
+
+        scores: {
+            pc: document.getElementById("pc").value,
+            ga: document.getElementById("ga").value,
+            lr: document.getElementById("lr").value,
+            fl: document.getElementById("fl").value,
+            cr: document.getElementById("cr").value
+        },
+
+        notes: {
+            pc_text: document.getElementById("pc_text").value,
+            ga_text: document.getElementById("ga_text").value,
+            lr_text: document.getElementById("lr_text").value,
+            fl_text: document.getElementById("fl_text").value,
+            cr_text: document.getElementById("cr_text").value
+        },
+
+        selectedChecklist: {
+            pc_text: [...selectedChecklist.pc_text],
+            ga_text: [...selectedChecklist.ga_text],
+            lr_text: [...selectedChecklist.lr_text],
+            fl_text: [...selectedChecklist.fl_text],
+            cr_text: [...selectedChecklist.cr_text]
+        },
+
+        allEntries
+    };
+
+    localStorage.setItem("slpgDraft", JSON.stringify(draft));
+}
 
 
 function resetAllFields(){
@@ -797,7 +849,11 @@ document.getElementById("addEntryBtn").addEventListener("click", () => {
 });
 
 
+document.querySelectorAll("input, textarea, select").forEach(el => {
 
+    el.addEventListener("input", saveDraft);
+
+});
 
 
 
@@ -1508,13 +1564,48 @@ window.addEventListener("beforeunload", (e) => {
 });
 
 
+function autoSelectChecklistByScore(categoryId, scoreValue) {
+
+    // Convert textbox id -> textarea id
+    const textareaId = categoryId + "_text";
+
+    // Clear old selections
+    selectedChecklist[textareaId].clear();
+
+    const groups = checklistData[textareaId] || [];
+
+    groups.forEach(group => {
+
+        // Find FIRST item in this group matching the score
+        const match = group.items.find(
+            item => item.score === String(scoreValue)
+        );
+
+        if (match) {
+            const fullValue = `${match.score} ${match.text}`;
+            selectedChecklist[textareaId].add(fullValue);
+        }
+    });
+
+    // Refresh UI
+    renderTagsForTextarea(textareaId);
+    updateConsolidated();
+    updateExcelTableCard();
+    updateFullExcelTable();
+}
+
+
+
+
+
+
 //Excel Card Formatting
 
 
 
 // ------------------ Subcategory Classifiers ------------------
 
-// PC classifier (already discussed)
+// PC classifier
 function classifyPCNote(note) {
     // Normalize separators: -, >, vs, |, ~, /, :, → flexible matching
     const parts = note.split(/-|>|vs|\||~|\/|:/i).map(p => p.trim());
@@ -1867,6 +1958,61 @@ if (textareaId === "cr_text") {
 
     return [...selected, ...freeForm.map(line => "- " + line)].join("\n");
 }
+
+
+
+function restoreDraft() {
+
+    const raw = localStorage.getItem("slpgDraft");
+
+    if (!raw) return;
+
+    try {
+
+        const draft = JSON.parse(raw);
+
+        // Restore trainee
+        document.getElementById("traineeName").value =
+            draft.traineeName || "";
+
+        // Restore scores
+        Object.entries(draft.scores || {}).forEach(([id, value]) => {
+            const el = document.getElementById(id);
+            if (el) el.value = value;
+        });
+
+        // Restore notes
+        Object.entries(draft.notes || {}).forEach(([id, value]) => {
+            const el = document.getElementById(id);
+            if (el) el.value = value;
+        });
+
+        // Restore checklist selections
+        Object.entries(draft.selectedChecklist || {}).forEach(([key, arr]) => {
+
+            selectedChecklist[key] = new Set(arr);
+
+            renderTagsForTextarea(key);
+        });
+
+        // Restore entries
+        allEntries = draft.allEntries || [];
+
+        updateAverage();
+        updateConsolidated();
+        updateExcelTableCard();
+        updateFullExcelTable();
+
+    } catch(err) {
+
+        console.error("Failed to restore draft:", err);
+
+    }
+}
+
+
+
+
 
 /* =====================================================
    SMART EVALUATOR PHRASE LIBRARY (Enhanced)
