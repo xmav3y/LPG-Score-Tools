@@ -1961,58 +1961,6 @@ if (textareaId === "cr_text") {
 
 
 
-function restoreDraft() {
-
-    const raw = localStorage.getItem("slpgDraft");
-
-    if (!raw) return;
-
-    try {
-
-        const draft = JSON.parse(raw);
-
-        // Restore trainee
-        document.getElementById("traineeName").value =
-            draft.traineeName || "";
-
-        // Restore scores
-        Object.entries(draft.scores || {}).forEach(([id, value]) => {
-            const el = document.getElementById(id);
-            if (el) el.value = value;
-        });
-
-        // Restore notes
-        Object.entries(draft.notes || {}).forEach(([id, value]) => {
-            const el = document.getElementById(id);
-            if (el) el.value = value;
-        });
-
-        // Restore checklist selections
-        Object.entries(draft.selectedChecklist || {}).forEach(([key, arr]) => {
-
-            selectedChecklist[key] = new Set(arr);
-
-            renderTagsForTextarea(key);
-        });
-
-        // Restore entries
-        allEntries = draft.allEntries || [];
-
-        updateAverage();
-        updateConsolidated();
-        updateExcelTableCard();
-        updateFullExcelTable();
-
-    } catch(err) {
-
-        console.error("Failed to restore draft:", err);
-
-    }
-}
-
-
-
-
 
 /* =====================================================
    SMART EVALUATOR PHRASE LIBRARY (Enhanced)
@@ -2364,6 +2312,3 @@ function restoreDraft() {
 </script>
 </body>
 </html>
-
-
-
